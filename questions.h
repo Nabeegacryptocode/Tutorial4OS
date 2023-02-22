@@ -18,9 +18,9 @@
 
 // List of 3 categories as array of strings
 static char categories[NUM_CATEGORIES][MAX_LEN] = {
-    "programming", 
-    "algorithms", 
-    "databases"
+    "General Knowledge",
+    "Anthropology",
+    "Philosophy"
 };
 
 // Questions struct for each question
@@ -34,6 +34,8 @@ typedef struct {
 
 // An array of 12 questions (4 for each category), initialized in initialize_game
 // this may need to be a pointer if you want it set dynamically
+question questions[NUM_QUESTIONS];
+
 question questions[NUM_QUESTIONS];
 
 // Initializes the array of questions for the game
@@ -50,5 +52,11 @@ extern bool valid_answer(char *category, int value, char *answer);
 
 // Returns true if the question has already been answered
 extern bool already_answered(char *category, int value);
+
+extern void track_answered(char *category, int value);
+
+extern bool answered();
+
+extern int qnum(char *category, int value);
 
 #endif /* QUESTIONS_H_ */

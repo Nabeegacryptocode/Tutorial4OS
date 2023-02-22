@@ -38,17 +38,77 @@ int main(int argc, char *argv[])
     initialize_game();
 
     // Prompt for players names
-    
-    // initialize each of the players in the array
+    printf("Welcome to Jeopardy!\n");
+    // Take player names as input
+ 
+
+        // initialize each of the players in the array
+        for(int i = 0; i < 4; i++) {
+        players[i].score = 0;
+
+        printf("Please Enter the name of your player: ");
+        scanf("%s", (char *) &players[i].name);
+    }
 
     // Perform an infinite loop getting command input from users until game ends
     while (fgets(buffer, BUFFER_LEN, stdin) != NULL)
     {
-        // Call functions from the questions and players source files
+     while(!answered())
+    {
+        system("clear");
 
-        // Execute the game until all questions are answered
+        char selected_player[MAX_LEN] = "";
+        char selected_category[MAX_LEN] = "";
+        int selected_val = 0;
 
-        // Display the final results and exit
+        do {
+            if(strcmp(selected_player, "") != 0)
+                printf("%s was not found", selected_player);
+
+            printf("Enter first player's name: ");
+            scanf("%s", (char *) &selected_player);
+        } while(!player_exists(players, 4, selected_player));
+
+        do {
+            if(selected_val != 0)
+                printf("Invalid selection");
+
+            printf("Choose category: ");
+            getchar();
+            fgets((char *) selected_category, MAX_LEN, stdin);
+            strtok(selected_category, "\n");
+
+            printf("Enter: ");
+            scanf("%d", (int *) &selected_val);
+        } while(already_answered(selected_category, selected_val));
+
+
+        system("clear");
+        display_question(selected_category, selected_val);
+
+        char *answer[MAX_LEN] = {0};
+        getchar();
+        fgets((char *) answer, MAX_LEN, stdin);
+
+        char *tokenize_answer;
+        tokenize((char *) answer, &tokenize_answer);
+
+        if(tokenize_answer == NULL)
+            printf("retry");
+        else if(valid_answer(selected_category, selected_val, tokenize_answer)) {
+            printf("Correct!");
+            printf("%s gets %d points! \n", selected_player, selected_val);
+            update_score(players, 4, selected_player, selected_val);
+        } else {
+            printf("Incorrect!");
+            int num = qnum(selected_category, selected_val);
+            printf("Correct answer: %s", questions[num].answer);
+        }
+
+        track_answered(selected_category, selected_val);
     }
+    show_results(players, 4);
+    getchar();
     return EXIT_SUCCESS;
+}
 }
